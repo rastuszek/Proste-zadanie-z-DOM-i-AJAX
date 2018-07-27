@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+
+<html lang="pl">
+	<head>
+	<title>Byle co tutaj</title>
+		<script>
+			var tak = 0;
+			function wczytajFoto(){
+				if(tak == 0){
+				obrazek.innerHTML="<img src='zdjecie.jpg'>";
+				tak=1;
+				}else{
+				obrazek.innerHTML="";
+				tak=0;
+				}
+			}
+			var xmlSerializer = new XMLSerializer();
+			function getXML(file, callback) {
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4) {
+						var parser = new DOMParser();
+						var xmlDoc = parser.parseFromString(xhttp.responseText, "application/xml");
+						callback(xmlDoc);
+					}
+				};
+				xhttp.open("GET", file, true);
+				xhttp.send();
+			}
+			
+			function getJSON(file, callback) {
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4) {
+						var json = JSON.parse(xhttp.responseText);
+						callback(json);
+					}
+				};
+				xhttp.open("GET", file, true);
+				xhttp.send();
+			}
+			
+			function wczytajDane() {
+				getXML("data_03_01.xml", function(xmlDoc) {
+					
+					var zwierze = xmlDoc.getElementsByTagName("zwierze");
+					
+					var imie = zwierze[0].getElementsByTagName("imie");
+					document.getElementById("imie").value = imie[0].textContent;
+					
+					var rodzaj = zwierze[0].getElementsByTagName("rodzaj");
+					document.getElementById("rodzaj").value = rodzaj[0].textContent;
+					 
+					var rasa = zwierze[0].getElementsByTagName("rasa");
+					document.getElementById("rasa").value = rasa[0].textContent;
+			 
+					var barwa = zwierze[0].getElementsByTagName("barwa");
+					document.getElementById("barwa").value = barwa[0].textContent;
+					
+					var charakterystyka = zwierze[0].getElementsByTagName("charakterystyka");
+					document.getElementById("charakterystyka").value = charakterystyka[0].textContent;
+					
+					var wielkosc = zwierze[0].getElementsByTagName("wielkosc");
+					document.getElementById("wielkosc").value = wielkosc[0].textContent;
+				});	
+			}	
+			
+			function wczytajOpiekuna() {
+				getJSON("data_03_01.json", function(json) {
+					for(var i = 0; i < json.data.items.length; i++) {
+						var item = json.data.items[i];
+						var caption = item.caption;
+						var value = item.value;
+						var option = document.createElement('option');
+						option.text = caption;
+						option.value = value;
+						document.getElementById("lista_opiekunow").appendChild(option);
+					}
+				});
+			}
+			
+			function wyczyscDane() {
+				document.getElementById("imie").value = "";
+				document.getElementById("rodzaj").value = "";
+				document.getElementById("rasa").value = "";
+				document.getElementById("charakterystyka").value = "";
+				document.getElementById("wielkosc").value = "";
+				document.getElementById("barwa").value = "";
+				var lista_przedmiotow = document.getElementById("lista_opiekunow");
+				
+				while (lista_opiekunow.firstChild) {
+					lista_opiekunow.removeChild(lista_opiekunow.firstChild);
+				}
+			}
+			 
+		</script>
+		
+		</head>
+		<body>
+		<div align="center">
+		
+			<button onclick="wczytajOpiekuna()">Wczytaj opiekunow</button>
+			<button onclick="wczytajDane()">Wczytaj dane zwierzecia</button>
+			<button onclick="wyczyscDane()">Wyczysc wszystkie dane</button>
+			<button onclick="wczytajFoto()">Wczytaj/usun zdjecie </button>
+		</div>
+		<div align="center" style="margin-top: 30px" >
+			<table  style="border:3px solid blue">
+				<tr>
+					<td>Lista opiekunow</td>
+					<td>
+						<select onchange="wczytajDane()" id="lista_opiekunow"></select>
+					</td>
+				</tr>
+				<tr>
+					<td>Imie</td>
+					<td>
+						<input id='imie' type="text" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Rodzaj</td>
+					<td>
+						<input id='rodzaj' type="text" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Barwa</td>
+					<td>
+						<input id='barwa' type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td>Rasa</td>
+					<td>
+						<input id='rasa'  type="text" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Wielkosc</td>
+					<td>
+						<input id='wielkosc'  type="text" />
+					</td>
+				</tr>
+				
+				
+				<tr>
+					<td>Charakterystyka</td>
+					<td>
+						<textarea id="charakterystyka"></textarea>
+					</td>
+				</tr>
+			</table>
+			<span id='obrazek'></span>
+		</div>	
+	</body>
+</html>

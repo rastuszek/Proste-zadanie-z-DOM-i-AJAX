@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<weterynaria>
+	<zwierze>
+		<imie>Puszek</imie>
+		<rodzaj>pies</rodzaj>
+		<rasa>unikatowa</rasa>
+		<barwa>szary</barwa>	
+		<wielkosc>maly</wielkosc>
+		<charakterystyka>Uwaga! Pies jest bardzo delikatny i wrazliwy.</charakterystyka>
+	</zwierze>
+</weterynaria>
+		
